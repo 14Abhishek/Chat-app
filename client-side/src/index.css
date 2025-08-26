@@ -1,0 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap');
+@import "tailwindcss";
+
+*_{
+    font-family: "UnifrakturMaguntia", cursive;
+}
+
+::-webkit-scrollbar {
+  display: none;;
+}
