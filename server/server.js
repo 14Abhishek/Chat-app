@@ -6,7 +6,7 @@ import { connectDb } from "./lib/db.js"
 import userRouter from "./routes/userRoutes.js"
 import { Server } from "socket.io"
 import { useId } from "react"
-
+import messageRouter from "./routes/messageRoutes.js"
 const app = express()
 const server = http.createServer(app)
 
@@ -41,6 +41,7 @@ app.use(cors())
 //Router setup
 app.use("/api/status", (req, res)=> res.send("Server is Serving (live)"));
 app.use("/api/auth", userRouter)
+app.use("/api/messages", messageRouter)
 
 //connecting to mongodb
 await connectDb()
