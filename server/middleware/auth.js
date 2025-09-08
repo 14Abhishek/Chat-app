@@ -3,8 +3,15 @@ import User from "../models/User.js"
 
 export const protectRoute = async(req, res, next)=>{
     try {
-        const token = req.headers.token
-        // i could also do req.header.authorization.split(' ')[1] and have validation check
+        let token;
+        const authHeader = req.headers.authorization;
+
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+            token = authHeader.split(' ')[1];
+        } else {
+            // handle missing or invalid token
+            return res.status(401).json({ error: 'Authorization token missing or invalid' });
+        }
 
         //we need the user _id ... so we decode the token
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET)

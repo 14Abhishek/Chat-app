@@ -15,7 +15,8 @@ export const signup = async(req, res)=>{
                 })}
         // data is valid, check if user already exists
         const user = await User.findOne({email})
-        if(!user){
+        if(user){
+            // console.log(user)
             return res.json({success:false, message:"User already Exists"})
         }
         // creating password 
@@ -56,7 +57,7 @@ export const login = async(req, res)=>{
             return res.json({success:false, message:"Password incorrect"})
         }
 
-        const token = generateToken(userData._id);
+        const tokenen = generateToken(userData._id);
         return res.json({success:true, userData, token, message:"Successfully Logged In"})
     } catch (error) {
         console.error(error.message);
