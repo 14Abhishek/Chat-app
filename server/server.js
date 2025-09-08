@@ -5,7 +5,6 @@ import "dotenv/config"
 import { connectDb } from "./lib/db.js"
 import userRouter from "./routes/userRoutes.js"
 import { Server } from "socket.io"
-import { useId } from "react"
 import messageRouter from "./routes/messageRoutes.js"
 const app = express()
 const server = http.createServer(app)

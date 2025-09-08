@@ -1,7 +1,7 @@
-import User from "../models/User";
-import Message from "../models/Message";
-import cloudinary from "../lib/cloudinary";
-import { io, userScoketMap } from "../server";
+import User from "../models/User.js";
+import Message from "../models/Message.js";
+import cloudinary from "../lib/cloudinary.js";
+import { io, userScoketMap } from "../server.js";
 
 // get all users except looged in users
 export const getUsersForSidebar = async(req, res)=>{
