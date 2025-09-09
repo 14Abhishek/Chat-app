@@ -12,9 +12,9 @@ axios.defaults.baseURL = backendUrl
 
 export const AuthContext = createContext();
 
-export const AuthProvider = ({children}) =>{
+export function AuthProvider ({children}){
 
-    cosnt [token, setToken] = useState(localStorage.getItem("token"))
+    const [token, setToken] = useState(localStorage.getItem("token"))
     const [authUser, setAuthUser] = useState(null)
     const [onlineUsers, setOnlineUsers] = useState([])
     const [socket, setSocket] = useState(null)
@@ -22,10 +22,17 @@ export const AuthProvider = ({children}) =>{
     // Check if user is authenticated and if so set the user data and connect the socket
     const checkAuth = async()=>{  // we wanna execute this thing whenever we open a web page so we use useEffect hook
         try {
-            const {data}  = await axios.get("/api/check") // userController function that tells if user is authenticated
+            const {data}  = await axios.get("/api/auth/check",{headers:{Authorization:`Bearer ${token}`},}) // userController function that tells if user is authenticated
+            if(!data){
+                console.log('check auth did not get data')
+                return;
+            }
+            
+            
             if(data.success){
                 setAuthUser(data.user)
                 connectSocket(data.user)
+                return data.user
             }
         } catch (error) {
             // a toast notifiaction 
@@ -42,12 +49,12 @@ export const AuthProvider = ({children}) =>{
             if(data.success){
                 setAuthUser(data.userData)
                 connectSocket(data.userData)
-                axios.defaults.headers.common["token"] = data.token
+                axios.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
                 setToken(data.token)
                 localStorage.setItem("token", data.token)
                 toast.success(data.message)
             }else{
-                toast.error(data.message)
+                toast.error(data.message )
             }
         } catch (error) {
             toast.error(error.message)
@@ -60,7 +67,7 @@ export const AuthProvider = ({children}) =>{
         setToken(null)
         setAuthUser(null)
         setOnlineUsers([])
-        axios.defaults.headers.common["token"] = null
+        axios.defaults.headers.common["Authorization"] = null
         toast.success("Logged Out Successfully")
         socket.disconnect()
     }
@@ -96,14 +103,25 @@ export const AuthProvider = ({children}) =>{
             setOnlineUsers(userIds)
         })
     }
-
+    
+    
     useEffect(()=>{
         if(token){
             // sets authorization header for any subsequent axios requests
-            axios.defaults.headers.common["token"] = token
+            axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
         }
         checkAuth()
-    }, [])
+        
+    }, [token])
+
+
+
+    useEffect(() => {
+    if (authUser) {
+        console.log("User is set:", authUser.fullName);
+    }
+    }, [authUser]);
+
 
 
     // whatever we make inside this objects will be accecible to our children
