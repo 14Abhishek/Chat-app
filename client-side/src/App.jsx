@@ -9,7 +9,7 @@ import { AuthContext } from "../context/AuthContext.jsx"
 function App() {  
   const {authUser} = useContext(AuthContext)
   return (
-    <div className = "bg-[url('./src/assets/bgImage.svg')] bg-contain">
+    <div className = "bg-[url('/bgImage.svg')] bg-contain">
       {/* when a user is loggedin he can only access the homePage and profilePage, but if he is not logged in he can only access LoginPage */}
       <Toaster/>
       <Routes>  
