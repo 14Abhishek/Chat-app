@@ -1,11 +1,24 @@
-import React, { useContext } from "react";
-import assets, { userDummyData } from "../assets/assets";
+import { useState, useEffect, useContext } from "react";
+import assets from "../assets/assets";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-export default function Sidebar({selectedUser, setSelectedUser}) {
+import { ChatContext } from "../../context/ChatContext";
+
+export default function Sidebar() {
+
+    const {getUsers, setSelectedUser, users, selectedUser, unseenMessages, setUnseenMessages} = useContext(ChatContext)
 
     // getting the logout with context
-    const {logout} = useContext(AuthContext)
+    const {logout, onlineUsers} = useContext(AuthContext)
+
+    const [input, setInput] = useState(false)
+
+    // filtering usrs based on the 'input' field
+    const filteredUsers = input ? users.filter((user)=> user.fullName.toLowerCase().includes(input.toLowerCase())) : users
+
+    useEffect(()=>{
+        getUsers();
+    },[onlineUsers])
 
     const navigate = useNavigate();
     return (
@@ -25,24 +38,24 @@ export default function Sidebar({selectedUser, setSelectedUser}) {
 
                 <div className="bg-[#282142] rounded-full flex items-center gap-2 py-3 px-4 mt-5">
                     <img src={assets.search_icon} alt='search' className="w-3"/>
-                    <input type="text"  className="bg-transparnt border-none outline-none text-white text-s placeholder-[#c8c8c8] flex-1" placeholder="Search User..."/>
+                    <input onChange= {(e)=>setInput(e.target.value)} type="text"  className="bg-transparnt border-none outline-none text-white text-s placeholder-[#c8c8c8] flex-1" placeholder="Search User..."/>
                 </div>
             </div>
 
             <div className="flex flex-col">
-                {userDummyData.map((user,idx)=>
+                {filteredUsers.map((user,idx)=>
                 (
                     <div key={idx} onClick={()=>{setSelectedUser(user)}} className={`relative flex items-center gap-2 p-2 pl-4 rounded cursor-pointer max-sm:text-sm ${selectedUser?.id===user._id && 'bg-[#282142]/50'}`}>
                         <img src={user?.profilePic || assets.avatar_icon} alt="" className="w-[35px]  aspect-[1/1] rounded-full mt-3"/>
                         <div className="flex flex-col leading-5">
                             <p>{user.fullName}</p>
                             {
-                                idx <3 ? 
+                                onlineUsers.includes(user._id) ? 
                                 <span className="text-green-400 text-xs">Online</span> : 
                                 <span className="text-neutral-400 text-xs">Offline</span>
                             }
                         </div>
-                        {idx > 2 && <p className="absolute top-4 right-4 text-xs h-5 w-5 flex justify-center items-center rounded-full bg-violet-500/50">{idx}</p>}
+                        {unseenMessages[user._id] > 0 && <p className="absolute top-4 right-4 text-xs h-5 w-5 flex justify-center items-center rounded-full bg-violet-500/50">{unseenMessages[user._id]}</p>}
                     </div>
                 )
                 )}

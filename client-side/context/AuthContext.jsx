@@ -116,11 +116,11 @@ export function AuthProvider ({children}){
 
 
 
-    useEffect(() => {
-    if (authUser) {
-        console.log("User is set:", authUser.fullName);
-    }
-    }, [authUser]);
+        // useEffect(() => {
+        // if (authUser) {
+        //     console.log("User is set:", authUser.fullName);
+        // }
+        // }, [authUser]);
 
 
 

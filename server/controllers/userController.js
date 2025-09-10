@@ -57,7 +57,7 @@ export const login = async(req, res)=>{
             return res.json({success:false, message:"Password incorrect"})
         }
 
-        const tokenen = generateToken(userData._id);
+        const token = generateToken(userData._id);
         return res.json({success:true, userData, token, message:"Successfully Logged In"})
     } catch (error) {
         console.error(error.message);
@@ -90,3 +90,6 @@ export const updateUserProfile= async (req, res) => {
         return res.status(500).json({success:true, message:error.message})
     }
 }
+
+
+

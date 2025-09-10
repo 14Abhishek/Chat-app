@@ -85,10 +85,10 @@ export const getMessages = async(req, res)=>{
             ]
         })
         // mark those messages as true
-        await Message.updateMany({senderId:selectedUserId,recieverId:myId}, {seen:true})
-        res.status(200).json({success:true,messages,})
+        await Messsage.updateMany({senderId:selectedUserId,recieverId:myId}, {seen:true})
+        res.status(200).json({success:true,messages,message:"got the messages"})
     } catch (error) {
-        console.error(error.message)
+        console.error('some error here')
         res.status(500).json({success:false,message:error.message})
     }
 }
@@ -102,7 +102,7 @@ export const markMessagesAsSeen = async(req,res)=>{
     await Message.findByIdAndUpdate(id, {seen:true})
     res.json({success:true})
   } catch (error) {
-    console.error(error.message);
+    // console.error(error.message);
     res.json({success:false, message:error.message})
   }
 }
@@ -137,6 +137,6 @@ export const sendMessage = async(req, res)=>{
     res.status(200).json({success:true, newMessage})
 
   } catch (error) {
-    
+    res.status(500).json({success:false,message:error.message})
   }
 }
