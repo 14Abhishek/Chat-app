@@ -85,10 +85,10 @@ export const getMessages = async(req, res)=>{
             ]
         })
         // mark those messages as true
-        await Messsage.updateMany({senderId:selectedUserId,recieverId:myId}, {seen:true})
+       await Message.updateMany({senderId:selectedUserId,recieverId:myId}, {seen:true})
         res.status(200).json({success:true,messages,message:"got the messages"})
     } catch (error) {
-        console.error('some error here')
+        console.error('some error here' + error.message)
         res.status(500).json({success:false,message:error.message})
     }
 }
@@ -117,16 +117,22 @@ export const sendMessage = async(req, res)=>{
     const {text, image} = req.body
     let imageUrl;
     if(image){
+
+      // cloudinary.uploader.upload(image).then(up=>{imageUrl =up.secure_url}).catch(err=>console.error(err.message))
+
       const uploadResponse = await cloudinary.uploader.upload(image)
       imageUrl = uploadResponse.secure_url
-      // better way would be cloudinary.uploader.upload(image).then(up=>{imageUrl =up.secure_url}).catch(err=>console.error(err))
+      // imageUrl.toString()
+
     }
-    const newMessage = Message.create({
-      senderId,
-      recieverId,
-      text,
-      image:imageUrl
-    })
+      const newMessage = await Message.create({
+        senderId,
+        recieverId,
+        text,
+        image:imageUrl
+      })
+
+    // console.log(newMessage)
 
     // Emit the message to the receiver socket
     const receiverSocketId = userScoketMap[recieverId]
@@ -137,6 +143,7 @@ export const sendMessage = async(req, res)=>{
     res.status(200).json({success:true, newMessage})
 
   } catch (error) {
+    console.error("SendMessage Error:", error);
     res.status(500).json({success:false,message:error.message})
   }
 }

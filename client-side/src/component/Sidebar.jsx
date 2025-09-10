@@ -45,7 +45,7 @@ export default function Sidebar() {
             <div className="flex flex-col">
                 {filteredUsers.map((user,idx)=>
                 (
-                    <div key={idx} onClick={()=>{setSelectedUser(user)}} className={`relative flex items-center gap-2 p-2 pl-4 rounded cursor-pointer max-sm:text-sm ${selectedUser?.id===user._id && 'bg-[#282142]/50'}`}>
+                    <div key={idx} onClick={()=>{setSelectedUser(user), setUnseenMessages(prev=>({...prev,[user._id]:0}))}} className={`relative flex items-center gap-2 p-2 pl-4 rounded cursor-pointer max-sm:text-sm ${selectedUser?.id===user._id && 'bg-[#282142]/50'}`}>
                         <img src={user?.profilePic || assets.avatar_icon} alt="" className="w-[35px]  aspect-[1/1] rounded-full mt-3"/>
                         <div className="flex flex-col leading-5">
                             <p>{user.fullName}</p>
