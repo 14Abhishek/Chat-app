@@ -31,4 +31,28 @@ git clone https://github.com/14Abhishek/Chat-app.git
 cd Chat-app
 ```
 
-then figure out on ur own
+~~then figure out on ur own~~
+
+### install all dependencies 
+
+```bash
+cd .\client-side\
+npm i
+cd .\server\
+npm i
+```
+
+### and then start your frontend 
+by first going in folder and then
+```bash
+cd .\client-side\
+npm run dev
+```
+
+### then fire the backend with 
+```bash
+cd .\server\
+npm run server
+```
+
+Then create account and do chatting
